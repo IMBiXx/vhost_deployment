@@ -12,8 +12,21 @@ sudo mkdir -p /var/www/$hostname/html
 sudo chown -R web:web /var/www/$hostname/html
 sudo chmod -R 775 /var/www/$hostname
 
-sudo cp /home/web/vhost/index.html /var/www/$hostname/html/
+sudo cp index.html /var/www/$hostname/html/
 
+echo "Enable url rewriting ? [y/n] (default: 'n')"
+read rewrite
+rewrite=${rewrite:-"n"}
+
+if [ $rewrite = "y" ];then
+echo "<Directory /var/www/$hostname/html>
+	Options Indexes FollowSymLinks MultiViews
+	AllowOverride All
+	Order allow,deny
+	allow from all
+</Directory>
+" > conf/$hostname.conf
+fi
 
 echo "<VirtualHost *:80>
 	ServerAdmin contact@$hostname
@@ -30,9 +43,9 @@ echo "<VirtualHost *:80>
 	SSLEngine on
 	SSLCertificateFile /etc/ssl/certs/$hostname.crt
 	SSLCertificateKeyFile /etc/ssl/certs/$hostname.key
-</VirtualHost>" > /home/web/vhost/conf/$hostname.conf
+</VirtualHost>" >> conf/$hostname.conf
 
-sudo cp /home/web/vhost/conf/$hostname.conf /etc/apache2/sites-available/
+sudo cp conf/$hostname.conf /etc/apache2/sites-available/
 
 sudo ln -s /etc/apache2/sites-available/$hostname /etc/apache2/sites-enabled/
 
