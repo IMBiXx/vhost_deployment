@@ -47,7 +47,7 @@ echo "<VirtualHost *:80>
 
 sudo cp conf/$hostname.conf /etc/apache2/sites-available/
 
-sudo ln -s /etc/apache2/sites-available/$hostname /etc/apache2/sites-enabled/
+sudo ln -s /etc/apache2/sites-available/$hostname.conf /etc/apache2/sites-enabled/
 
 echo "\n"
 echo "==================================================================\n"
